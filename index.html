@@ -17,7 +17,8 @@
 -->
 </div>
 <div id="weatherInfo">
-    
+    <p id="weatherTemp"></p>
+    <p id="weatherWind"></p>
 </div>
 
 <script>
@@ -106,7 +107,7 @@ function createButton(buttonName){
 }
 function weatherOpen(cityName) {   
       var xhr = new XMLHttpRequest();
-        var request = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + '&appid=' + apikey;
+        var request = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + '&appid=' + apikey+ "&units=metric";
       xhr.open('GET', request, false);
       xhr.send();
 
@@ -114,13 +115,11 @@ function weatherOpen(cityName) {
         // обработать ошибку
         alert('Ошибка ' + xhr.status + ': ' + xhr.statusText);
       } else {
+          
           var value = JSON.parse(xhr.responseText);
-          var weatherMain = document.createElement('p');
-          weatherMain.innerHTML = value.weather[0].main;
-          var weatherTemp = document.createElement('p');
-          weatherTemp.innerHTML = value.main.temp;
-          weatherInfo.appendChild(weatherMain);
-          weatherInfo.appendChild(weatherTemp);
+          var temp = value.weather[0].main;
+          document.querySelector("#weatherWind").innerHTML = temp;
+          document.querySelector("#weatherTemp").innerHTML = value.main.temp;
         
        
       }
