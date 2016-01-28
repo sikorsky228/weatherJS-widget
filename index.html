@@ -16,48 +16,43 @@
  <button class="buttons" onclick="openWeather()" name="Paris">Paris</button>
 -->
 </div>
+<div id="weatherInfo">
+    
+</div>
+
 <script>
 //Default citys
-var obj = {"citys": ["London", "NY"] };
-    
+var citys = {London : {}, NY :{} };
+
     
 //Есть ли у юзера уже настройки
-if (localStorage.getItem('object') === null) {
-    alert("no");
+if (localStorage.getItem('citys') === null) {
+    alert("Впервые на сайте");
 
 
 //add to local storage
-var storedNames = JSON.stringify(obj);
-localStorage.setItem("object", storedNames);
-
-var storage = JSON.parse(localStorage.getItem("object"))
+var storedNames = JSON.stringify(citys);
+localStorage.setItem("citys", storedNames);
 
 //выводим кнопки с городами
-for (var i=0; i<storage.citys.length; i++)
-{
-    var button = document.createElement('button');
-          button.name = storage.citys[i];
-          button.id = storage.citys[i];
-          button.innerHTML = storage.citys[i];
-          button.onclick = function() {openWeather() };
-          document.querySelector("#divButtons").appendChild(button);
+for (var cityName in citys){
+    createButton(cityName);
 }
+
+
     
+
 }
     else {
         alert("yes");
-        var storage = JSON.parse(localStorage.getItem("object"))
+        var storage = JSON.parse(localStorage.getItem("citys"))
 
 
-for (var i=0; i<storage.citys.length; i++)
-{
-    var button = document.createElement('button');
-          button.name = storage.citys[i];
-          button.id = storage.citys[i];
-          button.innerHTML = storage.citys[i];
-          button.onclick = function() {openWeather() };
-          document.querySelector("#divButtons").appendChild(button);
-    }
+        //выводим кнопки с городами
+        for (var cityName in storage){
+            createButton(cityName);
+        }
+        
     }
 var apikey = '82a0816e42bd78a6425eb1adca71428f';
     
@@ -87,31 +82,29 @@ if (gcn.status != 200) {
       } else {
           //add city in array
           //нужно обновлять объект из localstorage, т.к. берет стандартных 2 города, а их там может быть уже больше
-          var storage = JSON.parse(localStorage.getItem("object"));
-          obj = storage;
+          var storage = JSON.parse(localStorage.getItem("citys"));
           //добавляем
-          obj["citys"].push(name);
+          storage[name] = {};
 
           //add array too localstorage
-          storedNames = JSON.stringify(obj);
-          localStorage.setItem("object", storedNames);
-    
-
-
-          //var obj = JSON.parse(gcn.responseText);
-          var button = document.createElement('button');
-          button.name = name;
-          button.id = name;
-          button.innerHTML = name;
-          button.onclick = function() {openWeather() };
-          document.querySelector("#divButtons").appendChild(button);
+          storedNames = JSON.stringify(storage);
+          localStorage.setItem("citys", storedNames);
+          
+          createButton(name);
  }    
 
     
 });    
 
-
-    function weatherOpen(cityName) {   
+function createButton(buttonName){
+    var button = document.createElement('button');
+          button.name = buttonName;
+          button.id = buttonName;
+          button.innerHTML = buttonName;
+          button.onclick = function() {openWeather() };
+          document.querySelector("#divButtons").appendChild(button);
+}
+function weatherOpen(cityName) {   
       var xhr = new XMLHttpRequest();
         var request = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + '&appid=' + apikey;
       xhr.open('GET', request, false);
@@ -126,8 +119,8 @@ if (gcn.status != 200) {
           weatherMain.innerHTML = value.weather[0].main;
           var weatherTemp = document.createElement('p');
           weatherTemp.innerHTML = value.main.temp;
-          document.body.appendChild(weatherMain);
-          document.body.appendChild(weatherTemp);
+          weatherInfo.appendChild(weatherMain);
+          weatherInfo.appendChild(weatherTemp);
         
        
       }
