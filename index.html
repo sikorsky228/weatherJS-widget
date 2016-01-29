@@ -98,12 +98,21 @@ if (gcn.status != 200) {
 });    
 
 function createButton(buttonName){
+    var block = document.createElement('div');
+    block.id=buttonName;
+    document.querySelector("#divButtons").appendChild(block);
     var button = document.createElement('button');
           button.name = buttonName;
           button.id = buttonName;
           button.innerHTML = buttonName;
           button.onclick = function() {openWeather() };
-          document.querySelector("#divButtons").appendChild(button);
+          block.appendChild(button);
+    var deleteButton = document.createElement('span');
+          deleteButton.name = buttonName;
+          deleteButton.innerHTML = "X";
+          deleteButton.onclick = function() {removeBlock(buttonName) };
+          block.appendChild(deleteButton);
+    
 }
 function weatherOpen(cityName) {   
       var xhr = new XMLHttpRequest();
@@ -124,6 +133,19 @@ function weatherOpen(cityName) {
        
       }
     }
+
+function removeBlock(cityName){
+    var element = document.getElementById(cityName);
+    element.parentNode.removeChild(element);
+                                   
+    //удаляем из local.storage город
+    var storage = JSON.parse(localStorage.getItem("citys"))
+    delete storage[cityName];
+    
+    //обновляем local.storage
+    storedNames = JSON.stringify(storage);
+    localStorage.setItem("citys", storedNames);
+}
   </script>
 
 </body>
