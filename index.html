@@ -14,10 +14,12 @@
 </div>
 <div id="weatherInfo">
     <p id="weatherTemp"></p>
-    <p id="weatherWind"></p>
+    <p id="weatherSky"></p>
 </div>
 
 <script>
+    
+//Нужен запрос на погоду при клике на кнопку с городом. При добавлении нового города данные не нужны
 //Города по умолчанию
 var citys = {London : {}, NY :{} };
 //ключ для api погодного сервиса
@@ -30,8 +32,7 @@ if (localStorage.getItem('citys') === null) {
     //добавляем дефолт в storage
     var storedNames = JSON.stringify(citys);
     localStorage.setItem("citys", storedNames);
-    
-    
+
     
     //выводим кнопки с городами
     for (var cityName in citys){
@@ -69,9 +70,7 @@ form.addEventListener("submit", function(event){
             alert('Ошибка ' + gcn.status + ': ' + gcn.statusText);
           } else {
               var value = JSON.parse(gcn.responseText);
-              
-              var temp = value.main.temp;
-              var sky = value.weather[0].main;
+
               //Добавляем новый город в storage
               
               //!!Нужно добавить проверку - нет ли уже такого города в табах!!
@@ -79,12 +78,11 @@ form.addEventListener("submit", function(event){
               
               //Берем то что там уже есть
               var storage = JSON.parse(localStorage.getItem("citys"));
-              //а так же неплохо бы сразу добавить погоду чтоб два раза на сервер не бегать   
-              storage[name] = {temp : temp, sky : sky};
-
-              //добавляем новый
+              //и добавляем новый город             
+              storage[name] = {};
               storedNames = JSON.stringify(storage);
               localStorage.setItem("citys", storedNames);
+              
               //функция добавления кнопки с городом
               createButton(name);
               
@@ -116,16 +114,28 @@ function createButton(buttonName){
     
 }
 function loadWeather(cityName) {
-          //берем localstorage
-          var storage = JSON.parse(localStorage.getItem("citys"));
-          //забираем оттуда данные нужного города
-          var temp = storage[cityName].temp;
-          var sky = storage[cityName].sky;
+ var gcn = new XMLHttpRequest();
+    var name = cityName;
+
+    var params = 'q=' + encodeURIComponent(name) + "&appid=" + encodeURIComponent(apikey) + "&units=metric";
+    var request = "http://api.openweathermap.org/data/2.5/weather?" + params;
+
+    gcn.open("GET", request, false);
+
+    gcn.send();
+    if (gcn.status != 200) {
+             //обработать ошибку
+            alert('Ошибка ' + gcn.status + ': ' + gcn.statusText);
+          } else {
+              var object = JSON.parse(gcn.responseText);
+              
+          var temp = object.main.temp;
+          var sky = object.weather[0].main;
     
-          document.querySelector("#weatherWind").innerHTML = sky;
+          document.querySelector("#weatherSky").innerHTML = sky;
           document.querySelector("#weatherTemp").innerHTML = temp;
     }
-
+}
 function removeBlock(cityName){
     var element = document.getElementById(cityName);
     element.parentNode.removeChild(element);
