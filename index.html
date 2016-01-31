@@ -21,7 +21,7 @@
     
 //Нужен запрос на погоду при клике на кнопку с городом. При добавлении нового города данные не нужны
 //Города по умолчанию
-var citys = {London : {}, NY :{} };
+var citys = {london : {}, ny :{} };
 //ключ для api погодного сервиса
 var apikey = '82a0816e42bd78a6425eb1adca71428f';
     
@@ -56,12 +56,21 @@ if (localStorage.getItem('citys') === null) {
 var form = document.querySelector("#form");
 form.addEventListener("submit", function(event){
     event.preventDefault();
-    var gcn = new XMLHttpRequest();
+    //берем имя города
     var name = document.querySelector("#cityName").value;
-
+    //переносим в строку и все буквы маленькие
+    name = name.toString();
+    name = name.toLowerCase();
+    var storage = JSON.parse(localStorage.getItem("citys"));
+    
+    //если такого объекта еще нет - это новый город, можно его добавлять
+    if (typeof(storage[name]) == "undefined"){
+        
+    event.preventDefault();
+    var gcn = new XMLHttpRequest();
+    //приводим к строке и делаем все буквы маленькими, для простоты проверок в дальнейшем
     var params = 'q=' + encodeURIComponent(name) + "&appid=" + encodeURIComponent(apikey) + "&units=metric";
     var request = "http://api.openweathermap.org/data/2.5/weather?" + params;
-    alert(request);
     gcn.open("GET", request, false);
 
     gcn.send();
@@ -69,15 +78,16 @@ form.addEventListener("submit", function(event){
              //обработать ошибку
             alert('Ошибка ' + gcn.status + ': ' + gcn.statusText);
           } else {
+              
               var value = JSON.parse(gcn.responseText);
 
               //Добавляем новый город в storage
               
               //!!Нужно добавить проверку - нет ли уже такого города в табах!!
-              
+
               
               //Берем то что там уже есть
-              var storage = JSON.parse(localStorage.getItem("citys"));
+
               //и добавляем новый город             
               storage[name] = {};
               storedNames = JSON.stringify(storage);
@@ -85,11 +95,21 @@ form.addEventListener("submit", function(event){
               
               //функция добавления кнопки с городом
               createButton(name);
+              //Очищаем поле для ввода
+              document.querySelector("#cityName").value = "";
               
  }    
 
+}        
     
-});    
+             
+         
+                      
+    else{
+          alert("Такой уже есть");
+    }
+});
+    
 function openWeather(){
     event.preventDefault;
       var cityName = event.target.name;
