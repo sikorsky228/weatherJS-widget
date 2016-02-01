@@ -13,8 +13,8 @@
 <div id="divButtons" >
 </div>
 <div id="weatherInfo">
-    <p id="weatherTemp"></p>
-    <p id="weatherSky"></p>
+    <p id="weatherTemp" parent=""></p>
+    <p id="weatherSky" parent=""></p>
 </div>
 
 <script>
@@ -151,7 +151,9 @@ function loadWeather(cityName) {
               
           var temp = object.main.temp;
           var sky = object.weather[0].main;
-    
+          //добавляем data атрибут с именем города
+          document.querySelector("#weatherSky").setAttribute('parent', name);
+          document.querySelector("#weatherTemp").setAttribute('parent', name);
           document.querySelector("#weatherSky").innerHTML = sky;
           document.querySelector("#weatherTemp").innerHTML = temp;
     }
@@ -167,6 +169,12 @@ function removeBlock(cityName){
     //обновляем local.storage
     storedNames = JSON.stringify(storage);
     localStorage.setItem("citys", storedNames);
+    
+    //удаляем данные погоды на странице, если они были включены
+    if (document.querySelector("#weatherSky").getAttribute('parent') == cityName){
+        document.querySelector("#weatherSky").innerHTML = "";
+        document.querySelector("#weatherTemp").innerHTML = "";
+    }
 }
   </script>
 
