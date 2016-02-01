@@ -1,0 +1,43 @@
+.form input{
+    width:200px;
+    font-size:20px;
+}
+.buttons div{
+    display:inline;
+    position: relative;
+}
+
+.buttons div span{
+    display:block;
+    position: absolute;
+    top:7px;
+    right:5px;
+    background-color:#fff;
+    cursor:pointer;
+    width:15px;
+    height:1px;
+    transform: rotate(45deg);
+}
+.buttons div span:after{
+    content:"";
+    display:block;
+    position: absolute;
+    top:-7px;
+    right:7px;
+    background-color:#fff;
+    cursor:pointer;
+    width:1px;
+    height:15px;
+    transform: rotate(0deg);
+}
+button{
+    padding:5px 40px 5px 20px;
+    font-size:16px;
+    font-weight: 700;
+    background-color:cadetblue;
+    border:none;
+    margin:2px;
+}
+button:first-letter{
+    text-transform: uppercase;
+}

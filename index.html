@@ -3,14 +3,16 @@
 
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
-<form id="form">
-<input type="text" id="cityName" name="cityName" />
+<form id="form" class="form">
+<input type="text" id="cityName" name="cityName" placeholder="Enter city name here" required>
+<input type="submit" value="Add city" />
 </form>
 
-<div id="divButtons" >
+<div id="divButtons" class="buttons">
 </div>
 <div id="weatherInfo">
     <p id="weatherTemp" parent=""></p>
@@ -19,11 +21,13 @@
 
 <script>
     
-//Нужен запрос на погоду при клике на кнопку с городом. При добавлении нового города данные не нужны
+
 //Города по умолчанию
 var citys = {london : {}, ny :{} };
 //ключ для api погодного сервиса
 var apikey = '82a0816e42bd78a6425eb1adca71428f';
+
+var form = document.querySelector("#form");
     
 //Есть ли у юзера уже настройки
 if (localStorage.getItem('citys') === null) {
@@ -53,7 +57,7 @@ if (localStorage.getItem('citys') === null) {
     }
     
   
-var form = document.querySelector("#form");
+
 form.addEventListener("submit", function(event){
     event.preventDefault();
     //берем имя города
@@ -82,12 +86,7 @@ form.addEventListener("submit", function(event){
               var value = JSON.parse(gcn.responseText);
 
               //Добавляем новый город в storage
-              
-              //!!Нужно добавить проверку - нет ли уже такого города в табах!!
-
-              
               //Берем то что там уже есть
-
               //и добавляем новый город             
               storage[name] = {};
               storedNames = JSON.stringify(storage);
@@ -101,10 +100,7 @@ form.addEventListener("submit", function(event){
  }    
 
 }        
-    
-             
-         
-                      
+                        
     else{
           alert("Такой уже есть");
     }
@@ -128,7 +124,6 @@ function createButton(buttonName){
           block.appendChild(button);
     var deleteButton = document.createElement('span');
           deleteButton.name = buttonName;
-          deleteButton.innerHTML = "X";
           deleteButton.onclick = function() {removeBlock(buttonName) };
           block.appendChild(deleteButton);
     
@@ -154,8 +149,9 @@ function loadWeather(cityName) {
           //добавляем data атрибут с именем города
           document.querySelector("#weatherSky").setAttribute('parent', name);
           document.querySelector("#weatherTemp").setAttribute('parent', name);
-          document.querySelector("#weatherSky").innerHTML = sky;
-          document.querySelector("#weatherTemp").innerHTML = temp;
+              
+          document.querySelector("#weatherSky").innerHTML = "Clouds: "+sky;
+          document.querySelector("#weatherTemp").innerHTML = "Temp:" +temp;
     }
 }
 function removeBlock(cityName){
