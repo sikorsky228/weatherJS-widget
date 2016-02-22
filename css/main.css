@@ -1,0 +1,3 @@
+.content p:first-letter{
+    text-transform: uppercase;
+}
