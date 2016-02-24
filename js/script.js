@@ -81,10 +81,14 @@ form.addEventListener("submit", function(event){
           alert("Такой уже есть");
     }
 });
-    
+function weatherIcons(val){
+      document.querySelector(".temp-img").style.display = val;
+      document.querySelector(".weather-img").style.display = val;
+}
 function openWeather(){
     event.preventDefault;
       var cityName = event.target.name;
+      weatherIcons('block');
       loadWeather(cityName);
 }
     
@@ -119,15 +123,20 @@ function loadWeather(cityName) {
             alert('Ошибка ' + gcn.status + ': ' + gcn.statusText);
           } else {
               var object = JSON.parse(gcn.responseText);
-              
-          var temp = object.main.temp;
-          var sky = object.weather[0].main;
+          
+          var temp = object.main.temp;    
+          var sky = object.weather[0].main;  
+          
+          
           //добавляем data атрибут с именем города
           document.querySelector("#weatherSky").setAttribute('parent', name);
           document.querySelector("#weatherTemp").setAttribute('parent', name);
-              
-          document.querySelector("#weatherSky").innerHTML = "Clouds: "+sky;
-          document.querySelector("#weatherTemp").innerHTML = "Temp:" +temp;
+          
+          document.querySelector("#weatherTemp").innerHTML = +temp;
+            
+          //непонятно почему не работает без "" перед переменной
+          document.querySelector("#weatherSky").innerHTML = ""+sky;
+          
     }
 }
 function removeBlock(cityName){
@@ -143,6 +152,8 @@ function removeBlock(cityName){
     localStorage.setItem("citys", storedNames);
     
     //удаляем данные погоды на странице, если они были включены
+    weatherIcons('none');
+    
     if (document.querySelector("#weatherSky").getAttribute('parent') == cityName){
         document.querySelector("#weatherSky").innerHTML = "";
         document.querySelector("#weatherTemp").innerHTML = "";

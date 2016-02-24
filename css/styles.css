@@ -13,8 +13,8 @@
 .buttons div span{
     display:block;
     position: absolute;
-    top:7px;
-    right:5px;
+    top:0;
+    right:10px;
     cursor:pointer;
     width:15px;
     height:15px;
@@ -24,10 +24,9 @@
     content:"";
     display:block;
     position: absolute;
-    top:-7px;
-    right:7px;
+    top:6px;
+    right:0;
     background-color:#fff;
-    cursor:pointer;
     width:15px;
     height:1px;
 
@@ -36,10 +35,9 @@
     content:"";
     display:block;
     position: absolute;
-    top:-7px;
-    right:7px;
+    top: -1px;
+    right: 7px;
     background-color:#fff;
-    cursor:pointer;
     width:1px;
     height:15px;
 }
@@ -56,4 +54,17 @@ button:first-child{
 }
 button:first-letter{
     text-transform: uppercase;
+}
+
+.temp-img,
+.weather-img{
+    display:none;
+    width:20px;
+    position:absolute;
+    left: 140px;
+}
+.weather-info-block{
+    position:relative;
+    width:420px;
+    margin: 0 auto;
 }
