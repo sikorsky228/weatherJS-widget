@@ -1,5 +1,5 @@
 //Города по умолчанию
-var citys = {london : {}, ny :{} };
+var citys = {'london' : {}, 'new york' :{} };
 //ключ для api погодного сервиса
 var apikey = '82a0816e42bd78a6425eb1adca71428f';
 
