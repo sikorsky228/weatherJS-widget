@@ -31,21 +31,8 @@ if (localStorage.getItem('citys') === null) {
         }
         
     }
-    
-  
-
-form.addEventListener("submit", function(event){
-    event.preventDefault();
-    //берем имя города
-    var name = document.querySelector("#cityName").value;
-    //переносим в строку и все буквы маленькие
-    name = name.toString();
-    name = name.toLowerCase();
-    var storage = JSON.parse(localStorage.getItem("citys"));
-    
-    //если такого объекта еще нет - это новый город, можно его добавлять
-    if (typeof(storage[name]) == "undefined"){
-        
+//запрос к API по имени города
+function getRequest(name){
     event.preventDefault();
     var gcn = new XMLHttpRequest();
     //приводим к строке и делаем все буквы маленькими, для простоты проверок в дальнейшем
@@ -60,6 +47,24 @@ form.addEventListener("submit", function(event){
           } else {
               
               var value = JSON.parse(gcn.responseText);
+              return value;
+}
+};
+  
+
+form.addEventListener("submit", function(event){
+    event.preventDefault();
+    //берем имя города
+    var name = document.querySelector("#cityName").value;
+    //переносим в строку и все буквы маленькие
+    name = name.toString();
+    name = name.toLowerCase();
+    var storage = JSON.parse(localStorage.getItem("citys"));
+    
+    //если такого объекта еще нет - это новый город, можно его добавлять
+    if (typeof(storage[name]) == "undefined"){
+        var value = getRequest(name);
+   
 
               //Добавляем новый город в storage
               //Берем то что там уже есть
@@ -75,12 +80,13 @@ form.addEventListener("submit", function(event){
               
  }    
 
-}        
+       
                         
     else{
           alert("Такой уже есть");
     }
 });
+//Добавляем иконки на страницу
 function weatherIcons(val){
       document.querySelector(".temp-img").style.display = val;
       document.querySelector(".weather-img").style.display = val;
@@ -109,20 +115,7 @@ function createButton(buttonName){
     
 }
 function loadWeather(cityName) {
- var gcn = new XMLHttpRequest();
-    var name = cityName;
-
-    var params = 'q=' + encodeURIComponent(name) + "&appid=" + encodeURIComponent(apikey) + "&units=metric";
-    var request = "http://api.openweathermap.org/data/2.5/weather?" + params;
-
-    gcn.open("GET", request, false);
-
-    gcn.send();
-    if (gcn.status != 200) {
-             //обработать ошибку
-            alert('Ошибка ' + gcn.status + ': ' + gcn.statusText);
-          } else {
-              var object = JSON.parse(gcn.responseText);
+ var object = getRequest(cityName);
           
           var temp = object.main.temp;    
           var sky = object.weather[0].main;  
@@ -137,8 +130,10 @@ function loadWeather(cityName) {
           //непонятно почему не работает без "" перед переменной
           document.querySelector("#weatherSky").innerHTML = ""+sky;
           
-    }
+    
 }
+
+//удаляем город
 function removeBlock(cityName){
     var element = document.getElementById(cityName);
     element.parentNode.removeChild(element);
