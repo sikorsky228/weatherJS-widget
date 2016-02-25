@@ -54,8 +54,15 @@ function getRequest(name){
 
 form.addEventListener("submit", function(event){
     event.preventDefault();
-    //берем имя города
+    
     var name = document.querySelector("#cityName").value;
+    
+    //проверка - название гороа состоит только из букв, пробелов и дефисов
+    
+    reg = /^[A-Za-z\s-]+$/i;
+    if (reg.test(name)){
+    //берем имя города
+    
     //переносим в строку и все буквы маленькие
     name = name.toString();
     name = name.toLowerCase();
@@ -78,12 +85,12 @@ form.addEventListener("submit", function(event){
               //Очищаем поле для ввода
               document.querySelector("#cityName").value = "";
               
- }    
-
-       
-                        
-    else{
-          alert("Такой уже есть");
+        }                        
+        else{
+              alert("Такой уже есть");
+        }
+    }else{
+        alert('Ошибка в имени города, проверьте еще раз что вы ввели');
     }
 });
 //Добавляем иконки на страницу
